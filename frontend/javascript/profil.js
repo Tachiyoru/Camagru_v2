@@ -12,7 +12,7 @@ export async function profil(container, callback) {
 
 	console.log(user)
 
-	const posts = await getAllPostsOfUser();
+	const userPosts = await getAllPostsOfUser();
 
 	console.log(posts);
 
@@ -61,6 +61,14 @@ export async function profil(container, callback) {
 
 	const app = document.getElementById('app');
 	app.style.alignItems = "center";
+
+	userPosts.forEach((post) => {
+		const postElement = document.createElement('div');
+		postElement.className = 'post';
+		postElement.innerHTML = `
+			<img id ="imgsrc" src="${post.post_path}" alt="${post.description}" />`;
+		postsContainer.appendChild(postElement);
+	});
 
 	const editProfileButton = document.getElementById('edit-profile-button');
 	const editProfileContainer = document.getElementById('edit-profile-container');

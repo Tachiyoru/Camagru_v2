@@ -15,6 +15,9 @@ import os
 PHOTOS_DIR = os.path.join(os.path.dirname(__file__), "../../assets")
 
 class postCtrl:
+	def __init__(self):
+		self.db = DatabaseModel().db
+
 	def createPost(request):
 		content_length = int(request.headers['Content-Length'])
 		try:
@@ -40,19 +43,28 @@ class postCtrl:
 				sticker = Image.open(os.path.join(PHOTOS_DIR, sticker_path)).convert("RGBA")
 
 				# Redimensionner le sticker (optionnel, à adapter selon votre logique)
-				sticker = sticker.resize((int(image.width * 0.8), int(image.height * 0.8)), Image.Resampling.LANCZOS)  # Exemple de redimensionnement
+				sticker = sticker.resize((int(image.width * 0.15), int(image.height * 0.15)), Image.Resampling.LANCZOS)  # Exemple de redimensionnement
 
 				# Positionner le sticker
 				image.paste(sticker, (sticker_left, sticker_top), sticker.convert("RGBA"))  # Utiliser alpha pour transparence
 
 			# Sauvegarder l'image fusionnée
-			output_dir = os.path.join(PHOTOS_DIR, "thumbnails")
+			output_dir = os.path.join(PHOTOS_DIR)
 			os.makedirs(output_dir, exist_ok=True)
 			timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-			output_path = os.path.join(output_dir, f"thumbnail_{timestamp}.png")
+			output_path = os.path.join(output_dir, f"post_{timestamp}.png")
 			image.save(output_path, "PNG")
 
-			utils.return_response(request, 200, json.dumps({'url': f"/assets/thumbnails/thumbnail_{timestamp}.png"}))
+			user_id = utils.get_user_id(request)
+			post = {
+				"user_id": user_id,
+				"post_path": f"http://localhost:8000/assets/post_{timestamp}.png"
+			}
+
+			post_model = PostModel()
+			post_model.add_post(post)
+
+			utils.return_response(request, 200, json.dumps({'url': f"/assets/post_{timestamp}.png"}))
 			return
 
 		except Exception as e:
@@ -105,12 +117,43 @@ class postCtrl:
 			user_id = cookies.get('user_id').value if cookies.get('user_id') else None
 
 			post_model = PostModel()
+			like_model = LikeModel()
+			comment_model = CommentModel()
 
-			response = post_model.get_all_post_of_user(user_id)
+			posts = post_model.get_all_posts()
+			likes = like_model.get_all_likes()
+			comments = comment_model.get_all_comments()
+
+			for post in posts:
+				post['created_at'] = post['created_at'].strftime('%Y-%m-%d %H:%M:%S')
+
+			for like in likes:
+				like['created_at'] = like['created_at'].strftime('%Y-%m-%d %H:%M:%S')
+
+			for comment in comments:
+				comment['created_at'] = comment['created_at'].strftime('%Y-%m-%d %H:%M:%S')
+
+			response = ({"posts": posts})
+
+			for post in posts:
+				post.update({"likes": []})
+				post.update({"comments": []})
+				for like in likes:
+					if (like["post_id"] == post["id"]):
+						post["likes"].append(like)
+				for comment in comments:
+					if (comment["post_id"] == post["id"]):
+						post["comments"].append(comment)
+
+			userPosts = []
+
+			for post in posts:
+				if (str(post['user_id']) == str(user_id)):
+					userPosts.append(post)
 
 		except Exception as error:
 			utils.return_response(request, 500, json.dumps({"error": str(error)}))
 			return
 
-		utils.return_response(request, 200, json.dumps(response))
+		utils.return_response(request, 200, json.dumps(userPosts))
 		return

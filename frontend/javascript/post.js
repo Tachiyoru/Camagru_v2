@@ -1,4 +1,4 @@
-import { checkSession, getUser } from "./utils.js";
+import { checkSession, getUser, getAllPosts, getAllPostsOfUser } from "./utils.js";
 
 export async function post(container) {
 	const userSession = await checkSession();
@@ -7,6 +7,12 @@ export async function post(container) {
 		window.location.href = '/#login';
 		return ;
 	}
+
+	const allPosts = await getAllPosts();
+	const userPosts = await getAllPostsOfUser();
+
+	console.log(allPosts)
+	console.log(userPosts)
 
 	container.innerHTML =
 		`<div id="postPage">
@@ -42,6 +48,8 @@ export async function post(container) {
 	const app = document.getElementById('app');
 	app.style.alignItems = "center";
 
+	let upload = 0;
+	let uploadImg;
 	const webcam = document.getElementById("webcam");
 	const canvas = document.getElementById("canvas");
 	const captureButton = document.getElementById("capture-button");
@@ -59,10 +67,18 @@ export async function post(container) {
 		"../assets/stickers/spidey.png"
 	];
 
+	userPosts.forEach((post) => {
+		const previousPost = document.createElement('img');
+		previousPost.src = post.post_path;
+		previousPost.classList.add("previous-post");
+		thumbnailsContainer.appendChild(previousPost);
+	})
+
+
 	superposableImages.forEach((src) => {
 		const img = document.createElement("img");
 		img.src = src;
-		img.classList.add("thumbnail");
+		img.classList.add("sticker");
 
 		img.addEventListener("mousedown", (e) => {
 			// Créer une copie du sticker
@@ -146,7 +162,10 @@ export async function post(container) {
 		captureButton.classList.add("active");
 	}
 
-	navigator.mediaDevices.getUserMedia({ video: true })
+	navigator.mediaDevices.getUserMedia({ video:
+		{width: { ideal: 400 },
+        height: { ideal: 400 }}
+	 })
 		.then((stream) => {
 			webcam.srcObject = stream;
 		})
@@ -154,29 +173,74 @@ export async function post(container) {
 			alert("Webcam not accessible. Please use the upload feature.");
 		});
 
+	imageUpload.addEventListener("change", (event) => {
+		const file = event.target.files[0];
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				// Remplacer la webcam par l'image sélectionnée
+				const preview = document.getElementById("preview");
+				preview.innerHTML = `
+					<img id="upload-img" src="${e.target.result}" style="width: 100%; height: auto;">
+					<canvas id="canvas" style="display: none;"></canvas>
+				`;
+
+				// Désactiver le flux vidéo de la webcam
+				if (webcam.srcObject) {
+					const tracks = webcam.srcObject.getTracks();
+					tracks.forEach((track) => track.stop());
+					webcam.srcObject = null;
+				}
+			};
+			reader.readAsDataURL(file);
+			upload = 1;
+		}
+	});
+
+
 	captureButton.addEventListener("click", () => {
 		const context = canvas.getContext("2d");
-		canvas.width = webcam.videoWidth;
-		canvas.height = webcam.videoHeight;
-		
+		let styles = window.getComputedStyle(webcam)
+		if (upload = 1) {
+			uploadImg = document.getElementById('upload-img');
+			if (uploadImg) {
+				styles = window.getComputedStyle(uploadImg)
+			}
+		}
+
+		console.log(styles)
+
+		let webcamWidth = parseInt(styles.width);
+		let webcamHeight = parseInt(styles.height);
+
+		canvas.width = webcamWidth;
+		canvas.height = webcamHeight;
+
+
+		console.log(webcamWidth)
+		console.log(webcamHeight)
 
 		// Dessiner l'image du webcam sur le canvas
-		context.drawImage(webcam, 0, 0, canvas.width, canvas.height);
+		if (upload = 0) {
+			context.drawImage(webcam, 0, 0, canvas.width, canvas.height);
+		} else {
+			context.drawImage(uploadImg, 0, 0, canvas.width, canvas.height);
+		}
+
 
 		// Collecter les stickers et leurs positions
 		const stickersData = [];
 		const stickers = document.querySelectorAll('.draggable'); // Sélectionner tous les stickers déplacés
 		stickers.forEach(sticker => {
-			const rect = sticker.getBoundingClientRect();
+			const parent = webcam.getBoundingClientRect();
+			const child = sticker.getBoundingClientRect();
 			let stickerSource = sticker.src;
 			stickerSource = stickerSource.split("assets/")[1]
-			console.log(stickerSource)
 			const stickerData = {
 				src: stickerSource,
-				left: rect.left - canvas.offsetLeft, // Position par rapport au canvas
-				top: rect.top - canvas.offsetTop, // Position par rapport au canvas
+				left: parseInt(child.x) - parseInt(parent.x), // Position par rapport au canvas
+				top: parseInt(child.y) - parseInt(parent.y), // Position par rapport au canvas
 			};
-			console.log(stickerData)
 			stickersData.push(stickerData);
 		});
 
@@ -193,40 +257,36 @@ export async function post(container) {
 			credentials: 'include'
 		})
 		.then((response) => response.json())
-		.then((data) => {
-			console.log(data);
-			const thumbnail = document.createElement("img");
-			thumbnail.src = `http://localhost:8000${data.url}`;
-			thumbnailsContainer.appendChild(thumbnail);
+		.then(() => {
+			post(container);
 		})
 		.catch((error) => console.error(error));
 	});
 
 
-	imageUpload.addEventListener("change", (event) => {
-		const file = event.target.files[0];
-		const reader = new FileReader();
-		reader.onload = (e) => {
-			fetch("http://localhost:8000/upload", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					image: e.target.result,
-					overlay: selectedImage,
-				}),
-				credentials: 'include'
-			})
-				.then((response) => response.json())
-				.then((data) => {
-					const thumbnail = document.createElement("img");
-					thumbnail.src = data.url;
-					thumbnailsContainer.appendChild(thumbnail);
-				})
-				.catch((error) => console.error(error));
-		};
-		reader.readAsDataURL(file);
-	});
+
+	// imageUpload.addEventListener("change", (event) => {
+	// 	const file = event.target.files[0];
+	// 	const reader = new FileReader();
+	// 	reader.onload = (e) => {
+	// 		fetch("http://localhost:8000/upload", {
+	// 			method: "POST",
+	// 			headers: {
+	// 				"Content-Type": "application/json",
+	// 			},
+	// 			body: JSON.stringify({
+	// 				image: e.target.result,
+	// 				overlay: selectedImage,
+	// 			}),
+	// 			credentials: 'include'
+	// 		})
+	// 			.then((response) => response.json())
+	// 			.then(() => {
+	// 				post(container);
+	// 			})
+	// 			.catch((error) => console.error(error));
+	// 	};
+	// 	reader.readAsDataURL(file);
+	// });
 }
 

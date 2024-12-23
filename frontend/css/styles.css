@@ -598,11 +598,10 @@ img {
 	height: 100%;
 	max-height: 100%;
 	display: grid;
-	grid-template-rows: 100px auto 50px 50px;
+	grid-template-rows: 100px auto 50px;
 	grid-template-areas:
 		"logo"
 		"posts"
-		"pagin"
 		"nav";
 	}
 
@@ -645,20 +644,17 @@ img {
 
 #webcam {
 	width: 100%;
+	aspect-ratio: 1/1;
+	object-fit: cover;
 }
 
-.thumbnail {
+.sticker {
 	width: 50px;
-}
-
-#thumbnails img {
-	/* width: 50px; */
 }
 
 #superposable-images {
 	display: flex;
 	justify-content: center;
-	background-color: #333333b6;
 	position: relative;
 }
 
@@ -671,7 +667,10 @@ img {
 	z-index: 1000;
 }
 
+#thumbnails {
+	display: flex;
+}
 
-#prev-pictures img {
-	width: 50px;
+.previous-post {
+	width: 150px;
 }

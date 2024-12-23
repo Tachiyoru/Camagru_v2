@@ -21,3 +21,13 @@ class	PostModel:
 		finally:
 			cursor.close()
 		return posts
+
+	def add_post(self, post):
+		cursor = self.db.cursor(dictionary=True)
+		try:
+			cursor.execute("INSERT INTO posts (user_id, post_path) VALUES (%s, %s)",
+			(post["user_id"], post["post_path"]))
+			self.db.commit()
+		finally:
+			cursor.close()
+		return True
