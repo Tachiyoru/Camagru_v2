@@ -12,9 +12,11 @@ export async function profil(container, callback) {
 
 	console.log(user)
 
-	const userPosts = await getAllPostsOfUser();
+	let userPosts = await getAllPostsOfUser();
 
-	console.log(posts);
+	userPosts = userPosts.reverse();
+
+	console.log(userPosts)
 
 	container.innerHTML =
 		`<div id="home">
@@ -43,6 +45,8 @@ export async function profil(container, callback) {
 					<p id="edit-profile-button"><strong>Edit profile</strong></p>
 				</div>
 
+				<div id="post-container"></div>
+
 				<div id="edit-profile-container" class="edit-profile-container">
 					<p><strong>My infos</strong></p>
 						<form id="edit-profile-form" action="submit" method="PUT">
@@ -62,11 +66,13 @@ export async function profil(container, callback) {
 	const app = document.getElementById('app');
 	app.style.alignItems = "center";
 
+	const postsContainer = document.getElementById('post-container');
+
 	userPosts.forEach((post) => {
 		const postElement = document.createElement('div');
 		postElement.className = 'post';
 		postElement.innerHTML = `
-			<img id ="imgsrc" src="${post.post_path}" alt="${post.description}" />`;
+			<img id ="imgsrc" src="${post.post_path}" />`;
 		postsContainer.appendChild(postElement);
 	});
 
