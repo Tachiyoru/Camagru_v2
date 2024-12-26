@@ -12,9 +12,9 @@ export async function home(container, callback, scrollValue) {
 
 	let usersList = await getAllUsers();
 
-	usersPosts.posts = usersPosts.posts.reverse();
+	usersPosts.posts = usersPosts.posts.sort((a, b) => b.id - a.id);
 
-	usersList = usersList.reverse();
+	console.log("ici",usersPosts)
 
 	container.innerHTML =
 		`<div id="home">
@@ -148,7 +148,9 @@ export async function home(container, callback, scrollValue) {
 							const postsPos = document.getElementById('posts-container');
 							postsPos.scrollTop = scrollValue;
 							const userPosts = document.querySelectorAll('.comment');
-							userPosts[post.id - 1].click();
+							console.log(post.id)
+							console.log(userPosts[post.id - 1])
+							userPosts[post.id - userPosts.length].click();
 						}, scrollValue);
 					})
 
@@ -167,7 +169,7 @@ export async function home(container, callback, scrollValue) {
 								const postsPos = document.getElementById('posts-container');
 								postsPos.scrollTop = scrollValue;
 								const userPosts = document.querySelectorAll('.comment');
-								userPosts[post.id - 1].click();
+								userPosts[post.id -1].click();
 							}, scrollValue);
 						} else {
 							form.reportValidity();
@@ -177,6 +179,8 @@ export async function home(container, callback, scrollValue) {
 		})
 		postsContainer.appendChild(postElement);
 	}
+
+
 
 	document.getElementById('logoutButton').addEventListener('click', function(event) {
 		event.preventDefault();

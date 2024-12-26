@@ -1,4 +1,4 @@
-import { checkSession, getAllPostsOfUser, getUser } from "./utils.js"
+import { checkSession, getAllUsers, getAllPostsOfUser, getUser, sendLike, sendComment } from "./utils.js"
 
 export async function profil(container, callback) {
 	const userSession = await checkSession();
@@ -14,9 +14,14 @@ export async function profil(container, callback) {
 
 	let userPosts = await getAllPostsOfUser();
 
-	userPosts = userPosts.reverse();
+	userPosts = userPosts.sort((a, b) => b._id - a._id);
 
-	console.log(userPosts)
+	console.log("la", userPosts)
+
+
+	let usersList = await getAllUsers()
+
+	console.log(usersList)
 
 	container.innerHTML =
 		`<div id="home">
@@ -68,12 +73,22 @@ export async function profil(container, callback) {
 
 	const postsContainer = document.getElementById('post-container');
 
-	userPosts.forEach((post) => {
+	let postGroup = null;
+
+	userPosts.forEach((post, index) => {
+		console.log(index)
+
+		if (index % 3 == 0) {
+			postGroup = document.createElement('div');
+			postGroup.className = 'post-group';
+			postsContainer.appendChild(postGroup)
+		}
+
 		const postElement = document.createElement('div');
 		postElement.className = 'post';
 		postElement.innerHTML = `
 			<img id ="imgsrc" src="${post.post_path}" />`;
-		postsContainer.appendChild(postElement);
+		postGroup.appendChild(postElement);
 	});
 
 	const editProfileButton = document.getElementById('edit-profile-button');
@@ -84,6 +99,7 @@ export async function profil(container, callback) {
 
 		editProfileButton.style.color = "#ff0059";
 		editProfileContainer.style.display = "flex";
+		postsContainer.style.display = "none";
 	})
 
 
@@ -167,7 +183,100 @@ export async function profil(container, callback) {
 
 		editProfileButton.style.color = "unset";
 		editProfileContainer.style.display = "none";
+		postsContainer.style.display = "flex";
 	})
+
+	const homeContainer = document.getElementById('home');
+	const userContainer = document.getElementById('user-container');
+
+	const focusPost = document.querySelectorAll('.post');
+	let index = 0;
+	for (let i = 0; focusPost[i]; i++) {
+		focusPost[i].addEventListener('click', () => {
+			const focusedElement = document.createElement('div')
+			focusedElement.setAttribute("id", "focused-section");
+			index = userPosts[i].id;
+			focusedElement.innerHTML = `
+			<i id="exit-focus-icon" class="fa-solid fa-xmark"></i>
+			<div id="focused-post">
+				<div id="focused-post-img">
+					<img src="${userPosts[i].post_path}" alt="${userPosts[i].description}" />
+				</div>
+				<div id="focused-post-section">
+					<div id="comment-display-section">
+
+					</div>
+					<div id="react-section">
+						<p><strong>${userPosts[i].likes.length}</strong> likes</p>
+						<div id="like-comment-section">
+							<i id="post-like-icon" class="fa-solid fa-heart"></i>
+							<form id="post-comment-form" action="post-comment" method="POST">
+								<label for="comment-input-form"></label>
+								<textarea type="text" id="comment-input-form" name="comment-input-form" placeholder="Add a comment..." required></textarea>
+							</form>
+							<p id="send-comment"><strong>Post</strong></p>
+						</div>
+					</div>
+				</div>
+			</div>
+			`;
+			userContainer.appendChild(focusedElement);
+			homeContainer.setAttribute("style", "overflow: hidden;")
+
+			const exitButton = document.getElementById("exit-focus-icon");
+			const focusedSection = document.getElementById("focused-section");
+			const sendLikeIcon = document.getElementById("post-like-icon");
+			const commentDisplay = document.getElementById("comment-display-section");
+			const sendCommentButton = document.getElementById("send-comment");
+
+			for (let like = 0; userPosts[i].likes[like]; like++) {
+				if (userPosts[i].likes[like].user_id == document.cookie.split('=')[1]) {
+					sendLikeIcon.style.color = "rgb(255, 89, 89)";
+				}
+			}
+
+			for (let c = 0; userPosts[i].comments[c]; c++) {
+				const userComment = document.createElement('p');
+				userComment.setAttribute("id", "userComment")
+				console.log(usersList[userPosts[i].comments[c].user_id -1])
+				userComment.innerHTML = `
+				<strong>${usersList[userPosts[i].comments[c].user_id -1].username}:</strong> ${userPosts[i].comments[c].comment}
+				`;
+				commentDisplay.appendChild(userComment);
+			}
+
+			exitButton.addEventListener('click', () => {
+				focusedSection.remove();
+				homeContainer.setAttribute("style", "overflow: visible;")
+			})
+
+			sendLikeIcon.addEventListener('click', () => {
+				sendLike(index);
+				profil(container, () => {
+					const focusPost = document.querySelectorAll('.post');
+					focusPost[i].click();
+				});
+			})
+
+			const form = document.getElementById('post-comment-form');
+			const commentInput = document.getElementById('comment-input-form');
+
+			sendCommentButton.addEventListener('click', () => {
+				if (form.checkValidity()) {
+					const commentValue = commentInput.value;
+					const post_id = userPosts[i].id;
+					sendComment(post_id, commentValue);
+
+					profil(container, () => {
+						const focusPost = document.querySelectorAll('.post');
+						focusPost[i].click();
+					});
+				} else {
+					form.reportValidity();
+				}
+			});
+		});
+	}
 
 	document.getElementById('logoutButton').addEventListener('click', function(event) {
 		event.preventDefault();

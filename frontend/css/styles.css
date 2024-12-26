@@ -592,7 +592,6 @@ img {
 #user-container {
 	display: grid;
 	grid-template-rows: 200px minmax(300px, auto);
-	gap: 10px;
 	overflow-y: scroll;
 }
 
@@ -679,13 +678,17 @@ img {
 #post-container {
 	width: 90%;
 	max-width: 400px;
+	display: flex;
 	justify-self: center;
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	grid-auto-rows: 1fr;
-	gap: 10px;
+	flex-direction: column;
+	padding-top: 10px;
 }
 
-#post-container img {
+.post-group {
 	width: 100%;
+	display: flex;
+}
+
+.post-group div img {
+	cursor: pointer;
 }
