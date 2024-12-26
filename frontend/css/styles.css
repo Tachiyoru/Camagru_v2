@@ -489,6 +489,7 @@ img {
 #pagination-controls p {
 	color: var(--primary-color);
 	font-weight: 700;
+	cursor: pointer;
 }
 
 @media (min-width: 430px) {

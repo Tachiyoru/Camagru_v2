@@ -8,9 +8,13 @@ export async function home(container, callback, scrollValue) {
 		return ;
 	}
 
-	const usersPosts = await getAllPosts();
+	let usersPosts = await getAllPosts();
 
-	const usersList = await getAllUsers();
+	let usersList = await getAllUsers();
+
+	usersPosts.posts = usersPosts.posts.reverse();
+
+	usersList = usersList.reverse();
 
 	container.innerHTML =
 		`<div id="home">
@@ -32,7 +36,6 @@ export async function home(container, callback, scrollValue) {
 		</div>`;
 
 	const app = document.getElementById('app');
-	console.log("home :", app);
 	app.style.alignItems = "center";
 	const postsContainer = document.getElementById('posts');
 
@@ -49,10 +52,9 @@ export async function home(container, callback, scrollValue) {
 		postElement.className = 'post';
 		postElement.innerHTML = `
 			<div id="post">
-				<img src="${post.post_path}" alt="${post.description}"/>
+				<img src="${post.post_path}"/>
 				<div id="post-infos">
 					<p id="like"><strong>${totalLikes}</strong> ${textLike}</p>
-					<p id="description"><strong>${usersList[post.user_id - 1].username}</strong>: ${post.description}</p>
 					<div id="post-icons">
 						<i id="post-like-icon" class="heart-icon fa-solid fa-heart"></i>
 						<i id="post-comment-icon" class="comment fa-regular fa-comment" comment-post-id="${post.id}"></i>
@@ -89,7 +91,7 @@ export async function home(container, callback, scrollValue) {
 					<i id="exit-focus-icon" class="fa-solid fa-xmark"></i>
 					<div id="focused-post">
 						<div id="focused-post-img">
-							<img src="${post.post_path}" alt="${post.description}" />
+							<img src="${post.post_path}"/>
 						</div>
 						<div id="focused-post-section">
 							<div id="comment-display-section">

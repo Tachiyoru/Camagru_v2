@@ -1,4 +1,4 @@
-import { checkSession, getUser, getAllPosts, getAllPostsOfUser } from "./utils.js";
+import { checkSession, getAllPostsOfUser } from "./utils.js";
 
 export async function post(container) {
 	const userSession = await checkSession();
@@ -8,10 +8,10 @@ export async function post(container) {
 		return ;
 	}
 
-	const allPosts = await getAllPosts();
-	const userPosts = await getAllPostsOfUser();
+	let userPosts = await getAllPostsOfUser();
 
-	console.log(allPosts)
+	userPosts = userPosts.reverse();
+
 	console.log(userPosts)
 
 	container.innerHTML =
@@ -56,8 +56,6 @@ export async function post(container) {
 	const superposableImagesContainer = document.getElementById("superposable-images");
 	const thumbnailsContainer = document.getElementById("thumbnails");
 	const imageUpload = document.getElementById("image-upload");
-
-	let selectedImage = null;
 
 	const superposableImages = [
 		"../assets/stickers/captain.png",
@@ -128,13 +126,13 @@ export async function post(container) {
 						const shiftX = e.clientX - clone.getBoundingClientRect().left;
 						const shiftY = e.clientY - clone.getBoundingClientRect().top;
 
-						const moveAt = (clientX, clientY) => {
-							const newLeft = clientX - containerRect.left - shiftX;
-							const newTop = clientY - containerRect.top - shiftY;
+						// const moveAt = (clientX, clientY) => {
+						// 	const newLeft = clientX - containerRect.left - shiftX;
+						// 	const newTop = clientY - containerRect.top - shiftY;
 
-							clone.style.left = `${newLeft}px`;
-							clone.style.top = `${newTop}px`;
-						};
+						// 	clone.style.left = `${newLeft}px`;
+						// 	clone.style.top = `${newTop}px`;
+						// };
 
 						document.addEventListener("mousemove", onMouseMove);
 
@@ -201,7 +199,7 @@ export async function post(container) {
 	captureButton.addEventListener("click", () => {
 		const context = canvas.getContext("2d");
 		let styles = window.getComputedStyle(webcam)
-		if (upload = 1) {
+		if (upload == 1) {
 			uploadImg = document.getElementById('upload-img');
 			if (uploadImg) {
 				styles = window.getComputedStyle(uploadImg)
@@ -221,7 +219,7 @@ export async function post(container) {
 		console.log(webcamHeight)
 
 		// Dessiner l'image du webcam sur le canvas
-		if (upload = 0) {
+		if (upload == 0) {
 			context.drawImage(webcam, 0, 0, canvas.width, canvas.height);
 		} else {
 			context.drawImage(uploadImg, 0, 0, canvas.width, canvas.height);
@@ -263,30 +261,5 @@ export async function post(container) {
 		.catch((error) => console.error(error));
 	});
 
-
-
-	// imageUpload.addEventListener("change", (event) => {
-	// 	const file = event.target.files[0];
-	// 	const reader = new FileReader();
-	// 	reader.onload = (e) => {
-	// 		fetch("http://localhost:8000/upload", {
-	// 			method: "POST",
-	// 			headers: {
-	// 				"Content-Type": "application/json",
-	// 			},
-	// 			body: JSON.stringify({
-	// 				image: e.target.result,
-	// 				overlay: selectedImage,
-	// 			}),
-	// 			credentials: 'include'
-	// 		})
-	// 			.then((response) => response.json())
-	// 			.then(() => {
-	// 				post(container);
-	// 			})
-	// 			.catch((error) => console.error(error));
-	// 	};
-	// 	reader.readAsDataURL(file);
-	// });
 }
 

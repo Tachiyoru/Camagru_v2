@@ -6,9 +6,11 @@ export async function gallery(container, callback) {
 
 	const usersPosts = await getAllPosts()
 
-	const usersList = await getAllUsers()
+	let usersList = await getAllUsers()
 
-	const posts = usersPosts.posts;
+	usersList = usersList.reverse();
+
+	const posts = usersPosts.posts.reverse();
 
 	const postsPerPage = 12;
 	let currentPage = 1;
