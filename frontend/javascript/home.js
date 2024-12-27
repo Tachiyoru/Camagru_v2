@@ -14,8 +14,6 @@ export async function home(container, callback, scrollValue) {
 
 	usersPosts.posts = usersPosts.posts.sort((a, b) => b.id - a.id);
 
-	console.log("ici",usersPosts)
-
 	container.innerHTML =
 		`<div id="home">
 			<div id="logo-block">
@@ -148,9 +146,8 @@ export async function home(container, callback, scrollValue) {
 							const postsPos = document.getElementById('posts-container');
 							postsPos.scrollTop = scrollValue;
 							const userPosts = document.querySelectorAll('.comment');
-							console.log(post.id)
-							console.log(userPosts[post.id - 1])
-							userPosts[post.id - userPosts.length].click();
+							const postTabLength = userPosts.length
+							userPosts[(postTabLength - post.id)].click();
 						}, scrollValue);
 					})
 
@@ -169,7 +166,8 @@ export async function home(container, callback, scrollValue) {
 								const postsPos = document.getElementById('posts-container');
 								postsPos.scrollTop = scrollValue;
 								const userPosts = document.querySelectorAll('.comment');
-								userPosts[post.id -1].click();
+								const postTabLength = userPosts.length
+								userPosts[(postTabLength - post.id)].click();
 							}, scrollValue);
 						} else {
 							form.reportValidity();

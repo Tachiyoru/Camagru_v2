@@ -39,11 +39,14 @@ class postCtrl:
 				sticker_left = sticker_data['left']
 				sticker_top = sticker_data['top']
 
+				print("LEFT", sticker_data['left'])
+				print("TOP", sticker_data['top'])
+
 				# Charger le sticker
 				sticker = Image.open(os.path.join(PHOTOS_DIR, sticker_path)).convert("RGBA")
 
 				# Redimensionner le sticker (optionnel, à adapter selon votre logique)
-				sticker = sticker.resize((int(image.width * 0.15), int(image.height * 0.15)), Image.Resampling.LANCZOS)  # Exemple de redimensionnement
+				sticker = sticker.resize((int(image.width * 0.37), int(image.height * 0.37)), Image.Resampling.LANCZOS)  # Exemple de redimensionnement
 
 				# Positionner le sticker
 				image.paste(sticker, (sticker_left, sticker_top), sticker.convert("RGBA"))  # Utiliser alpha pour transparence

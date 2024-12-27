@@ -277,6 +277,10 @@ img {
 	color: #f05151;
 }
 
+#send-comment {
+	cursor: pointer;
+}
+
 #post #post-icons #post-comment-icon {
 	margin-left: 15px;
 	transition: color 0.3s ease;
@@ -581,6 +585,9 @@ img {
 
 #thumbnails {
 	display: flex;
+	overflow-x: auto; /* Active le scroll horizontal */
+	scroll-snap-type: x mandatory; /* Optionnel pour un scroll fluide */
+	-webkit-overflow-scrolling: touch;
 }
 
 .previous-post {

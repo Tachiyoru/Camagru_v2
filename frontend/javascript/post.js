@@ -83,12 +83,13 @@ export async function post(container) {
 			const clone = img.cloneNode(true);
 			clone.classList.add("draggable");
 			clone.style.position = "absolute";
+			clone.style.width = "150px";
 			activateCaptureButton();
 
 			// Calculer les coordonnées relatives au conteneur
 			const containerRect = superposableImagesContainer.getBoundingClientRect();
-			const offsetX = e.clientX - containerRect.left;
-			const offsetY = e.clientY - containerRect.top;
+			const offsetX = e.clientX - containerRect.left - parseInt(clone.style.width) / 2;
+			const offsetY = e.clientY - containerRect.top - parseInt(clone.style.width) / 2;
 
 			clone.style.left = `${offsetX}px`;
 			clone.style.top = `${offsetY}px`;
@@ -122,26 +123,14 @@ export async function post(container) {
 
 					// Après avoir relâché, rendre le clone déplaçable à nouveau
 					clone.addEventListener("mousedown", (e) => {
-						// Réinitialiser les mêmes étapes que lors du premier clic
-						const shiftX = e.clientX - clone.getBoundingClientRect().left;
-						const shiftY = e.clientY - clone.getBoundingClientRect().top;
-
-						// const moveAt = (clientX, clientY) => {
-						// 	const newLeft = clientX - containerRect.left - shiftX;
-						// 	const newTop = clientY - containerRect.top - shiftY;
-
-						// 	clone.style.left = `${newLeft}px`;
-						// 	clone.style.top = `${newTop}px`;
-						// };
-
 						document.addEventListener("mousemove", onMouseMove);
 
-						document.addEventListener("mouseup", () => {
+						document.addEventListener("mouseup", (ev) => {
 								document.removeEventListener("mousemove", onMouseMove);
+								console.log("event:", ev);
 							},
 							{ once: true }
 						);
-
 						e.preventDefault();
 					});
 				},
@@ -162,7 +151,7 @@ export async function post(container) {
 
 	navigator.mediaDevices.getUserMedia({ video:
 		{width: { ideal: 400 },
-        height: { ideal: 400 }}
+		height: { ideal: 400 }}
 	 })
 		.then((stream) => {
 			webcam.srcObject = stream;
@@ -176,18 +165,13 @@ export async function post(container) {
 		if (file) {
 			const reader = new FileReader();
 			reader.onload = (e) => {
-				// Remplacer la webcam par l'image sélectionnée
-				const preview = document.getElementById("preview");
-				preview.innerHTML = `
-					<img id="upload-img" src="${e.target.result}" style="width: 100%; height: auto;">
-					<canvas id="canvas" style="display: none;"></canvas>
-				`;
-
 				// Désactiver le flux vidéo de la webcam
 				if (webcam.srcObject) {
 					const tracks = webcam.srcObject.getTracks();
 					tracks.forEach((track) => track.stop());
 					webcam.srcObject = null;
+					webcam.style.backgroundImage = `url(${e.target.result})`;
+					webcam.style.backgroundSize = 'contain';
 				}
 			};
 			reader.readAsDataURL(file);
@@ -195,71 +179,72 @@ export async function post(container) {
 		}
 	});
 
-
 	captureButton.addEventListener("click", () => {
 		const context = canvas.getContext("2d");
-		let styles = window.getComputedStyle(webcam)
-		if (upload == 1) {
-			uploadImg = document.getElementById('upload-img');
-			if (uploadImg) {
-				styles = window.getComputedStyle(uploadImg)
-			}
-		}
 
-		console.log(styles)
-
+		let backgroundImage = null;
+		let styles = window.getComputedStyle(webcam);
 		let webcamWidth = parseInt(styles.width);
 		let webcamHeight = parseInt(styles.height);
 
 		canvas.width = webcamWidth;
 		canvas.height = webcamHeight;
 
+		// Fonction pour collecter les stickers et envoyer les données
+		const processAndSendData = () => {
+			console.log("CONTEXT :", context);
 
-		console.log(webcamWidth)
-		console.log(webcamHeight)
+			// Collecter les stickers et leurs positions
+			const stickersData = [];
+			const stickers = document.querySelectorAll('.draggable');
+			stickers.forEach(sticker => {
+				const parent = webcam.getBoundingClientRect();
+				const child = sticker.getBoundingClientRect();
+				let stickerSource = sticker.src;
+				stickerSource = stickerSource.split("assets/")[1];
 
-		// Dessiner l'image du webcam sur le canvas
-		if (upload == 0) {
-			context.drawImage(webcam, 0, 0, canvas.width, canvas.height);
-		} else {
-			context.drawImage(uploadImg, 0, 0, canvas.width, canvas.height);
-		}
+				const stickerData = {
+					src: stickerSource,
+					left: parseInt(child.x) - parseInt(parent.x),
+					top: parseInt(child.y) - parseInt(parent.y),
+				};
+				stickersData.push(stickerData);
+			});
+			console.log("stickersData", stickersData);
 
+			// Envoyer les données au serveur
+			fetch("http://localhost:8000/upload", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					image: canvas.toDataURL(),
+					stickers: stickersData,
+				}),
+				credentials: 'include'
+			})
+			.then((response) => response.json())
+			.then(() => {
+				post(container);
+			})
+			.catch((error) => console.error(error));
+		};
 
-		// Collecter les stickers et leurs positions
-		const stickersData = [];
-		const stickers = document.querySelectorAll('.draggable'); // Sélectionner tous les stickers déplacés
-		stickers.forEach(sticker => {
-			const parent = webcam.getBoundingClientRect();
-			const child = sticker.getBoundingClientRect();
-			let stickerSource = sticker.src;
-			stickerSource = stickerSource.split("assets/")[1]
-			const stickerData = {
-				src: stickerSource,
-				left: parseInt(child.x) - parseInt(parent.x), // Position par rapport au canvas
-				top: parseInt(child.y) - parseInt(parent.y), // Position par rapport au canvas
+		if (upload == 1) {
+			backgroundImage = new Image();
+			backgroundImage.src = styles.backgroundImage.slice(5, -2);
+			console.log(backgroundImage.src);
+
+			backgroundImage.onload = () => {
+				context.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+				processAndSendData();
 			};
-			stickersData.push(stickerData);
-		});
-
-		// Envoyer l'image du canvas et les stickers avec leurs positions
-		fetch("http://localhost:8000/upload", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				image: canvas.toDataURL(),
-				stickers: stickersData, // Envoyer les stickers et leurs positions
-			}),
-			credentials: 'include'
-		})
-		.then((response) => response.json())
-		.then(() => {
-			post(container);
-		})
-		.catch((error) => console.error(error));
+		} else {
+			// Dessiner l'image du webcam directement
+			context.drawImage(webcam, 0, 0, canvas.width, canvas.height);
+			processAndSendData();
+		}
 	});
-
 }
 
