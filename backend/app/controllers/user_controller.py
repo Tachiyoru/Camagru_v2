@@ -90,6 +90,10 @@ class	userCtrl:
 			utils.return_response(request, 400, json.dumps({"error": "register: Invalid JSON"}))
 			return
 
+		if not utils.is_valid_email(post_data.get('username')):
+			utils.return_response(request, 400, json.dumps({"error": "Username can have only '-' and '_' as special caracter"}))
+			return
+
 		if not utils.is_valid_email(post_data.get('email')):
 			utils.return_response(request, 400, json.dumps({"error": "Invalid email address"}))
 			return

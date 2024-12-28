@@ -135,6 +135,10 @@ class utils:
 		request.end_headers()
 		request.wfile.write(body.encode('utf-8'))
 
+	def is_valid_username(username):
+		pattern = r'^[a-zA-Z0-9_-]{3,20}$'
+		return bool(re.match(pattern, username))
+
 	def is_valid_password(password):
 		pattern = r'^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>])(?=.{8,})'
 		return bool(re.match(pattern, password))

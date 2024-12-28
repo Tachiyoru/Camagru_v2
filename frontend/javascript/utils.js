@@ -104,13 +104,15 @@ export async function sendLike(post_id) {
 
 export async function sendComment(post_id, comment) {
 	try {
+		const secureComment = escapeHtml(comment)
+
 		const response = await fetch('http://localhost:8000/sendComment', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
 			credentials: 'include',
-			body:JSON.stringify({"post_id": post_id, "comment": comment}),
+			body:JSON.stringify({"post_id": post_id, "comment": secureComment}),
 		})
 		return response.json()
 	}
@@ -119,3 +121,14 @@ export async function sendComment(post_id, comment) {
 	}
 
 }
+
+function escapeHtml(text) {
+    const map = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#039;',
+    };
+    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+  }
