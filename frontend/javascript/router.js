@@ -27,7 +27,7 @@ export function router() {
 		register(app);
 	} else if (route === '#login') {
 		login(app);
-	} else if (route === '#profil') {
+	} else if (route.startsWith('#profil')) {
 		profil(app);
 	} else if (route === '#resetPassword') {
 		resetPassword(app);

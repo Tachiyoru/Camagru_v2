@@ -1,13 +1,13 @@
 import { reloadCSS } from './utils.js';
 
 export function newPassword(container) {
-    const urlParams = new URLSearchParams(window.location.hash.split('?')[1]);
-    const userToken = urlParams.get('token');
+	const urlParams = new URLSearchParams(window.location.hash.split('?')[1]);
+	const userToken = urlParams.get('token');
 
-    if (!userToken) {
-        console.error("Token non trouvé dans l'URL");
-        return;
-    }
+	if (!userToken) {
+		console.error("Token non trouvé dans l'URL");
+		return;
+	}
 	fetch('http://localhost:8000/checkSession', {
 		method: 'GET',
 		headers: {

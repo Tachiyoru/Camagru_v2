@@ -33,11 +33,13 @@ router.get("/comments", commentCtrl.get_all_comments)
 
 router.put("/updateUser", userCtrl.update_user)
 
+router.delete("/deletePost", postCtrl.delete_post)
+
 
 class RequestHandler(BaseHTTPRequestHandler):
 	def end_headers(self):
 		self.send_header('Access-Control-Allow-Origin', 'http://localhost:9000')
-		self.send_header('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS')
+		self.send_header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
 		self.send_header('Access-Control-Allow-Headers', 'Authorization, Content-Type')
 		self.send_header('Access-Control-Allow-Credentials', 'true')
 		super().end_headers()

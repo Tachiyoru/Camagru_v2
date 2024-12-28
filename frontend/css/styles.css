@@ -702,3 +702,13 @@ img {
 .post-group div img {
 	cursor: pointer;
 }
+
+#delete-post-icon {
+	padding: 20px;
+	font-size: 30px;
+	transition: ease-in-out 0.3s;
+}
+
+#delete-post-icon:hover {
+	color: red;
+}

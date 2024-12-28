@@ -79,6 +79,40 @@ class utils:
 		except Exception as e:
 			print(f"Erreur lors de l'envoi de l'email: {e}")
 
+	def send_notification_email(user_email, post_id):
+		sender_email=os.getenv("EMAIL_USER")
+		sender_password=os.getenv("EMAIL_PASSWORD")
+		recipient_email=user_email
+		subject="New comment : Camagru"
+
+		validation_url =f"http://localhost:9000/#profil/id={post_id}"
+		body=f"You got a new comment on your post ! : {validation_url}"
+
+		try:
+			# Création du message
+			msg = MIMEMultipart()
+			msg['From'] = sender_email
+			msg['To'] = recipient_email
+			msg['Subject'] = subject
+
+			# Attacher le corps du mail
+			msg.attach(MIMEText(body, 'plain'))
+
+			# Connexion au serveur SMTP (Gmail dans cet exemple)
+			server = smtplib.SMTP('smtp.gmail.com', 587)
+			server.starttls()  # Démarrer le chiffrement TLS
+			server.login(sender_email, sender_password)  # Authentification
+
+			# Envoi de l'email
+			text = msg.as_string()
+			server.sendmail(sender_email, recipient_email, text)
+			server.quit()  # Fermer la connexion au serveur
+
+			print("Email envoyé avec succès!")
+
+		except Exception as e:
+			print(f"Erreur lors de l'envoi de l'email: {e}")
+
 	def get_user_id(request):
 		cookie_header = request.headers.get('Cookie')
 		cookies = http.cookies.SimpleCookie(cookie_header)

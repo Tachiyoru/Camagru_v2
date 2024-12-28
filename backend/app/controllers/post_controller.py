@@ -160,3 +160,45 @@ class postCtrl:
 
 		utils.return_response(request, 200, json.dumps(userPosts))
 		return
+
+	def get_post_by_id(request):
+		try:
+			cookie_header = request.headers.get('Cookie')
+			cookies = http.cookies.SimpleCookie(cookie_header)
+
+			user_id = cookies.get('user_id').value if cookies.get('user_id') else None
+
+			post_model = PostModel()
+
+			posts = post_model.get_all_posts()
+
+			post['created_at'] = post['created_at'].strftime('%Y-%m-%d %H:%M:%S')
+
+		except Exception as error:
+			utils.return_response(request, 500, json.dumps({"error": str(error)}))
+			return
+
+		utils.return_response(request, 200, json.dumps(post))
+		return
+
+	def delete_post(request):
+		content_length = int(request.headers['Content-Length'])
+
+		try:
+			post_data = json.loads(request.rfile.read(content_length))
+
+			cookie_header = request.headers.get('Cookie')
+			cookies = http.cookies.SimpleCookie(cookie_header)
+
+			user_id = cookies.get('user_id').value if cookies.get('user_id') else None
+
+			post_model = PostModel()
+
+			print("POST_DATA: ", post_data)
+
+			post_model.delete_post(post_data)
+
+			utils.return_response(request, 200, json.dumps({"message": "Post deleted successfully !"}))
+
+		except Exception as error:
+			utils.return_response(request, 200, json.dumps({"error": str(error)}))

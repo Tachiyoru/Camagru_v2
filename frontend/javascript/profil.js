@@ -1,6 +1,11 @@
 import { checkSession, getAllUsers, getAllPostsOfUser, getUser, sendLike, sendComment } from "./utils.js"
 
 export async function profil(container, callback) {
+
+	const urlParams = new URLSearchParams(window.location.hash.split('/')[1]);
+    const postNotify = urlParams.get('id');
+	console.log(postNotify)
+
 	const userSession = await checkSession();
 
 	if (userSession.logged == false) {
@@ -10,18 +15,13 @@ export async function profil(container, callback) {
 
 	const user = await getUser();
 
-	console.log(user)
-
 	let userPosts = await getAllPostsOfUser();
 
-	userPosts = userPosts.sort((a, b) => b._id - a._id);
+	userPosts = userPosts.sort((a, b) => b.id - a.id);
 
-	console.log("la", userPosts)
-
+	console.log(userPosts)
 
 	let usersList = await getAllUsers()
-
-	console.log(usersList)
 
 	container.innerHTML =
 		`<div id="home">
@@ -76,8 +76,6 @@ export async function profil(container, callback) {
 	let postGroup = null;
 
 	userPosts.forEach((post, index) => {
-		console.log(index)
-
 		if (index % 3 == 0) {
 			postGroup = document.createElement('div');
 			postGroup.className = 'post-group';
@@ -219,6 +217,7 @@ export async function profil(container, callback) {
 					</div>
 				</div>
 			</div>
+			<i id="delete-post-icon" class="fa-regular fa-trash-can"></i>
 			`;
 			userContainer.appendChild(focusedElement);
 			homeContainer.setAttribute("style", "overflow: hidden;")
@@ -275,8 +274,32 @@ export async function profil(container, callback) {
 					form.reportValidity();
 				}
 			});
+
+			const deletePostIcon = document.getElementById('delete-post-icon');
+
+			deletePostIcon.addEventListener('click', (event) => {
+				event.preventDefault()
+				fetch('http://localhost:8000/deletePost', {
+					method: 'DELETE',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					credentials: 'include',
+					body: userPosts[i].id
+				})
+				.then(response => response.json)
+				.then(data => {
+					console.log(data);
+					profil(container);
+				})
+				.catch((error) => {
+					console.error('Error:', error);
+				})
+			});
 		});
 	}
+
+
 
 	document.getElementById('logoutButton').addEventListener('click', function(event) {
 		event.preventDefault();
@@ -299,6 +322,16 @@ export async function profil(container, callback) {
 			console.error('Error:', error);
 		})
 	})
+
+	if (postNotify != null) {
+		const focusPost = document.querySelectorAll('.post');
+		for (let i = 0; focusPost[i]; i++) {
+			console.log(focusPost[i])
+			console.log(userPosts[i].id)
+			if (userPosts[i].id == postNotify)
+				focusPost[i].click();
+		}
+	}
 
 	if (callback && typeof callback === 'function') {
 		callback();
