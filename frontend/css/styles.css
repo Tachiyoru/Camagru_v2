@@ -553,9 +553,13 @@ img {
 }
 
 #post-section {
+	grid-area: posts;
 	align-self: center;
 	justify-self: center;
+	width: 90%;
+	height: 100%;
 	max-width: 400px;
+	overflow-y: scroll;
 }
 
 #webcam {
@@ -585,9 +589,8 @@ img {
 
 #thumbnails {
 	display: flex;
-	overflow-x: auto; /* Active le scroll horizontal */
-	scroll-snap-type: x mandatory; /* Optionnel pour un scroll fluide */
-	-webkit-overflow-scrolling: touch;
+	overflow-x: auto;
+	scroll-snap-type: x mandatory;
 }
 
 .previous-post {

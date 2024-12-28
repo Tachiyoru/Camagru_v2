@@ -49,7 +49,6 @@ export async function post(container) {
 	app.style.alignItems = "center";
 
 	let upload = 0;
-	let uploadImg;
 	const webcam = document.getElementById("webcam");
 	const canvas = document.getElementById("canvas");
 	const captureButton = document.getElementById("capture-button");
