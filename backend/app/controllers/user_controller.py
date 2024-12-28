@@ -38,6 +38,8 @@ class	userCtrl:
 
 		user_id = cookies.get('user_id').value if cookies.get('user_id') else None
 
+		print("USER_ID: ", user_id)
+
 		if user_id is None:
 			utils.return_response(request, 402, json.dumps({
 				'logged': False,
@@ -90,7 +92,7 @@ class	userCtrl:
 			utils.return_response(request, 400, json.dumps({"error": "register: Invalid JSON"}))
 			return
 
-		if not utils.is_valid_email(post_data.get('username')):
+		if not utils.is_valid_username(post_data.get('username')):
 			utils.return_response(request, 400, json.dumps({"error": "Username can have only '-' and '_' as special caracter"}))
 			return
 
@@ -145,10 +147,10 @@ class	userCtrl:
 
 		user_model = UserModel()
 
-		user = user_model.get_user_by_email(post_data.get('email'))
+		user = user_model.get_user_by_username(post_data.get('username'))
 
 		if user is None:
-			utils.return_response(request, 400, json.dumps({"error": "Invalid email or password"}))
+			utils.return_response(request, 400, json.dumps({"error": "Invalid username or password"}))
 			return
 
 		if user[5] == 0:
@@ -156,13 +158,13 @@ class	userCtrl:
 			return
 
 		if bcrypt.checkpw(post_data.get('password').encode('utf-8'), user[2].encode('utf-8')):
-			user_model.user_login(post_data.get('email'))
+			user_model.user_login(post_data.get('username'))
 			cookie = http.cookies.SimpleCookie()
 			cookie['user_id'] = user[0]
 			response_body = json.dumps({"message": "User logged successfully"})
 			utils.return_response(request, 200, response_body, cookie=cookie)
 		else:
-			utils.return_response(request, 400, json.dumps({"error": "Invalid email or password"}))
+			utils.return_response(request, 400, json.dumps({"error": "Invalid username or password"}))
 		return
 
 	def logout(request):

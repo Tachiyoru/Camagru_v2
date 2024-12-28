@@ -89,10 +89,10 @@ class   UserModel:
 			return True
 
 
-	def user_login(self, user_email):
+	def user_login(self, username):
 		cursor = self.db.cursor()
 		try:
-			cursor.execute("UPDATE users SET is_log = %s WHERE email = %s", (1, user_email))
+			cursor.execute("UPDATE users SET is_log = %s WHERE username = %s", (1, username))
 			self.db.commit()
 		finally:
 			cursor.close()
