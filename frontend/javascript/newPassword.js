@@ -18,10 +18,8 @@ export function newPassword(container) {
 	.then(response => response.json())
 	.then(data => {
 		if (data.logged) {
-			console.log('Response:', data);
 			window.location.href = '/#home';
 		} else {
-			console.log('Response:', data);
 			container.innerHTML = `
 			<div class="main-form-container">
 				<div id="newPassword" class="form-container">
@@ -37,7 +35,6 @@ export function newPassword(container) {
 			</div> `
 
 			const app = document.getElementById('app');
-			console.log("register :", app);
 			app.style.alignItems = "center";
 
 			document.getElementById('newPasswordForm').addEventListener('submit', function(event) {
@@ -61,7 +58,6 @@ export function newPassword(container) {
 					})
 					.then(response => response.json())
 					.then(data => {
-						console.log('Response:', data);
 						if (!data.error) {
 							window.location.href = '/#passwordConfirm';
 						} else {

@@ -40,10 +40,8 @@ class utils:
 			server.sendmail(sender_email, recipient_email, text)
 			server.quit()  # Fermer la connexion au serveur
 
-			print("Email envoyé avec succès!")
-
 		except Exception as e:
-			print(f"Erreur lors de l'envoi de l'email: {e}")
+			return
 
 	def send_password_email(user_email, user_token):
 		sender_email=os.getenv("EMAIL_USER")
@@ -74,10 +72,8 @@ class utils:
 			server.sendmail(sender_email, recipient_email, text)
 			server.quit()  # Fermer la connexion au serveur
 
-			print("Email envoyé avec succès!")
-
 		except Exception as e:
-			print(f"Erreur lors de l'envoi de l'email: {e}")
+			return
 
 	def send_notification_email(user_email, post_id):
 		sender_email=os.getenv("EMAIL_USER")
@@ -108,10 +104,8 @@ class utils:
 			server.sendmail(sender_email, recipient_email, text)
 			server.quit()  # Fermer la connexion au serveur
 
-			print("Email envoyé avec succès!")
-
 		except Exception as e:
-			print(f"Erreur lors de l'envoi de l'email: {e}")
+			return
 
 	def get_user_id(request):
 		cookie_header = request.headers.get('Cookie')

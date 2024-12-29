@@ -38,8 +38,6 @@ class	userCtrl:
 
 		user_id = cookies.get('user_id').value if cookies.get('user_id') else None
 
-		print("USER_ID: ", user_id)
-
 		if user_id is None:
 			utils.return_response(request, 402, json.dumps({
 				'logged': False,
@@ -313,7 +311,6 @@ class	userCtrl:
 			utils.return_response(request, 200, json.dumps({'message': 'Toggled successfully'}))
 
 		except Exception as error:
-			print("ERROR: ", error)
 			utils.return_response(request, 500, json.dumps({'error': str(error)}))
 			return
 		return
@@ -331,10 +328,6 @@ class	userCtrl:
 			user_model = UserModel()
 
 			user = user_model.get_user_by_id(user_id)
-
-			print("POST DATA :", post_data)
-
-			print("USER : ", user)
 
 			if post_data.get('username'):
 				user['username'] = post_data.get('username')
@@ -358,7 +351,6 @@ class	userCtrl:
 			utils.return_response(request, 200, json.dumps({'message': 'User succesfully updated'}))
 
 		except Exception as error:
-			print("ERROR: ", error)
 			utils.return_response(request, 500, json.dumps({'error': str(error)}))
 			return
 		return

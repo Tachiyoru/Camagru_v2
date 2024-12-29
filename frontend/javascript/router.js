@@ -13,8 +13,6 @@ export function router() {
 	const app = document.getElementById('app');
 	const route = window.location.hash;
 
-	console.log(route);
-
 	if (route.startsWith('#accountConfirm')) {
 		accountConfirm(app);
 	} else if (route.startsWith('#newPassword')) {

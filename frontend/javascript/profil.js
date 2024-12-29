@@ -4,7 +4,6 @@ export async function profil(container, callback) {
 
 	const urlParams = new URLSearchParams(window.location.hash.split('/')[1]);
     const postNotify = urlParams.get('id');
-	console.log(postNotify)
 
 	const userSession = await checkSession();
 
@@ -18,8 +17,6 @@ export async function profil(container, callback) {
 	let userPosts = await getAllPostsOfUser();
 
 	userPosts = userPosts.sort((a, b) => b.id - a.id);
-
-	console.log(userPosts)
 
 	let usersList = await getAllUsers()
 
@@ -123,7 +120,6 @@ export async function profil(container, callback) {
 			.then(data => {
 				profil(container, () => {
 					const editProfileButton = document.getElementById('edit-profile-button');
-					console.log(editProfileButton);
 					editProfileButton.click();
 					if (data.error) {
 						const errorMessageElement = document.getElementById("error-message");
@@ -165,7 +161,6 @@ export async function profil(container, callback) {
 			.then(() => {
 				profil(container, () => {
 					const editProfileButton = document.getElementById('edit-profile-button');
-					console.log(editProfileButton);
 					editProfileButton.click();
 				})
 			})
@@ -237,7 +232,6 @@ export async function profil(container, callback) {
 			for (let c = 0; userPosts[i].comments[c]; c++) {
 				const userComment = document.createElement('p');
 				userComment.setAttribute("id", "userComment")
-				console.log(usersList[userPosts[i].comments[c].user_id -1])
 				userComment.innerHTML = `
 				<strong>${usersList[userPosts[i].comments[c].user_id -1].username}:</strong> ${userPosts[i].comments[c].comment}
 				`;
@@ -288,8 +282,7 @@ export async function profil(container, callback) {
 					body: userPosts[i].id
 				})
 				.then(response => response.json)
-				.then(data => {
-					console.log(data);
+				.then(() => {
 					profil(container);
 				})
 				.catch((error) => {
@@ -312,7 +305,6 @@ export async function profil(container, callback) {
 		})
 		.then(response => response.json())
 		.then(data => {
-			console.log(data);
 			if (!data.error) {
 				app.style.alignItems = "center";
 				window.location.href = '/#login';
@@ -326,8 +318,6 @@ export async function profil(container, callback) {
 	if (postNotify != null) {
 		const focusPost = document.querySelectorAll('.post');
 		for (let i = 0; focusPost[i]; i++) {
-			console.log(focusPost[i])
-			console.log(userPosts[i].id)
 			if (userPosts[i].id == postNotify)
 				focusPost[i].click();
 		}

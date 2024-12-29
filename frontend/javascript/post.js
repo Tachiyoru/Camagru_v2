@@ -12,8 +12,6 @@ export async function post(container) {
 
 	userPosts = userPosts.reverse();
 
-	console.log(userPosts)
-
 	container.innerHTML =
 		`<div id="postPage">
 			<div id="logo-block">
@@ -126,7 +124,6 @@ export async function post(container) {
 
 						document.addEventListener("mouseup", (ev) => {
 								document.removeEventListener("mousemove", onMouseMove);
-								console.log("event:", ev);
 							},
 							{ once: true }
 						);
@@ -191,7 +188,6 @@ export async function post(container) {
 
 		// Fonction pour collecter les stickers et envoyer les données
 		const processAndSendData = () => {
-			console.log("CONTEXT :", context);
 
 			// Collecter les stickers et leurs positions
 			const stickersData = [];
@@ -209,7 +205,6 @@ export async function post(container) {
 				};
 				stickersData.push(stickerData);
 			});
-			console.log("stickersData", stickersData);
 
 			// Envoyer les données au serveur
 			fetch("http://localhost:8000/upload", {
@@ -233,8 +228,6 @@ export async function post(container) {
 		if (upload == 1) {
 			backgroundImage = new Image();
 			backgroundImage.src = styles.backgroundImage.slice(5, -2);
-			console.log(backgroundImage.src);
-
 			backgroundImage.onload = () => {
 				context.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
 				processAndSendData();

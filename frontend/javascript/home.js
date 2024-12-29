@@ -191,7 +191,6 @@ export async function home(container, callback, scrollValue) {
 		})
 		.then(response => response.json())
 		.then(data => {
-			console.log(data);
 			if (!data.error) {
 				app.style.alignItems = "center";
 				window.location.href = '/#login';

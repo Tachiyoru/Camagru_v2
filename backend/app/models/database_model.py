@@ -25,9 +25,7 @@ class DatabaseModel:
 				password=db_config['password'],
 				database=db_config['database']
 			)
-			print("Connexion à la base de données réussie.")
 		except mysql.connector.Error as err:
-			print(f"Erreur de connexion à la base de données : {err}")
 			self.db = None
 
 	def get_connection(self):

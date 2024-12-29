@@ -49,5 +49,3 @@ class	likeCtrl:
 			like_model.add_like(post_data["post_id"], user_id)
 			utils.return_response(request, 200, json.dumps({"message": "Post liked"}))
 		return
-
-# raise Exception(like['user_id'],  like, type(like))

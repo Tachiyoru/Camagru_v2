@@ -11,10 +11,8 @@ export function login(container) {
 	.then(response => response.json())
 	.then(data => {
 		if (data.logged) {
-			console.log('Response:', data);
 			window.location.href = '/#home';
 		} else {
-			console.log('Response:', data);
 			container.innerHTML = `
 			<div class="main-form-container">
 				<div id="login" class="form-container">
@@ -37,7 +35,6 @@ export function login(container) {
 			reloadCSS();
 
 			const app = document.getElementById('app');
-			console.log("login :", app);
 			app.style.alignItems = "center";
 
 			document.getElementById('loginForm').addEventListener('submit', function(event) {
@@ -57,7 +54,6 @@ export function login(container) {
 				})
 				.then(response => response.json())
 				.then(data => {
-					console.log('Response:', data);
 					if (!data.error) {
 						window.location.href = '/#home';
 					} else {

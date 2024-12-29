@@ -64,7 +64,6 @@ class RequestHandler(BaseHTTPRequestHandler):
 	def do_GET(self):
 		if self.path.startswith("/assets/"):
 			photo_name = self.path[len("/assets/"):]
-			print("PHOTO_NAME :", photo_name)
 			self.serve_photo(photo_name)
 		else:
 			router.handle_request(self)
@@ -82,7 +81,6 @@ class RequestHandler(BaseHTTPRequestHandler):
 #security to prevent the server from restarting
 if __name__ == '__main__':
 		server = HTTPServer(('0.0.0.0', 8000), RequestHandler)
-		print("Server running on port 8000...")
 		server.serve_forever()
 
 # PHP EQUIVALENT FOR HTTPServer

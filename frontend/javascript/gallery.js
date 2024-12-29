@@ -4,13 +4,18 @@ export async function gallery(container, callback) {
 
 	const userSession = await checkSession()
 
-	const usersPosts = await getAllPosts()
+	let usersPosts = null;
+	let usersList = null;
+	let posts = null;
 
-	let usersList = await getAllUsers()
+	usersPosts = await getAllPosts()
 
-	usersList = usersList.reverse();
-
-	const posts = usersPosts.posts.reverse();
+	if (userSession.logged == true) {
+		usersList = await getAllUsers()
+		usersList = usersList.reverse();
+	}
+	
+	posts = usersPosts.posts.reverse();
 
 	const postsPerPage = 12;
 	let currentPage = 1;
@@ -46,7 +51,7 @@ export async function gallery(container, callback) {
 			<li><a href="#gallery"><i class="fa-solid fa-magnifying-glass"></i></a></li>
 			<li><a href="#login"><i class="fa-regular fa-square-plus"></i></a></li>
 			<li><a href="#login"><i class="fa-solid fa-user"></i></a></li>
-			<li><a href="#login"><i class="fa-solid fa-right-to-bracket"></i></a></li>
+			<li><a href="#login"><i id="logoutButton" class="fa-solid fa-right-to-bracket"></i></a></li>
 			`
 	}
 
@@ -200,7 +205,6 @@ export async function gallery(container, callback) {
 		})
 		.then(response => response.json())
 		.then(data => {
-			console.log(data);
 			if (!data.error) {
 				window.location.href = '/#login';
 				return ;
