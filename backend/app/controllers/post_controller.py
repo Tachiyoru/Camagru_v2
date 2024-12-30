@@ -202,3 +202,33 @@ class postCtrl:
 
 		except Exception as error:
 			utils.return_response(request, 200, json.dumps({"error": str(error)}))
+
+# PHP EQUIVALENT FOR PIL
+# Image Processing and GD
+# https://www.php.net/manual/en/book.image.php
+
+# PHP EQUIVALENT FOR BASE64
+# base64_encode
+# base64_encode — Encodes data with MIME base64
+# base64_decode
+# https://www.php.net/manual/en/function.base64-encode.php
+# https://www.php.net/manual/en/function.base64-decode.php
+
+#PHP EQUIVALENT FOR DATETIME
+# The DateTime class
+# https://www.php.net/manual/en/class.datetime.php
+
+# PHP EQUIVALENT FOR http.cookies
+# Super globale $_COOKIE
+# $_COOKIE is an array containing the same method of http.Cookies.
+# https://www.php.net/manual/en/reserved.variables.cookies.php
+
+# EQUIVALENT FOR OS / DOTENV IN PHP
+# Super globale $_ENV
+# An associative array of variables passed via the environment method.
+# https://www.php.net/manual/en/reserved.variables.environment.php
+
+# PHP EQUIVALENT FOR json
+# JSON Functions
+# PHP natively include his own JSON library
+# https://www.php.net/manual/en/ref.json.php

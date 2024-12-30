@@ -83,13 +83,24 @@ if __name__ == '__main__':
 		server = HTTPServer(('0.0.0.0', 8000), RequestHandler)
 		server.serve_forever()
 
+# PHP EQUIVALENT FOR os.path.join & os.path.isfile(file_path)
+# $photos_dir = dirname(__FILE__) . "/../assets";
+# dirname — Returns a parent directory's path
+# https://www.php.net/manual/en/function.dirname.php
+
+# PHP EQUIVALENT FOR os.path.isfile(file_path)
+# if (is_file($file_path)) {
+# is_file — Tells whether the filename is a regular file
+# https://www.php.net/manual/en/function.is-file.php
+
+# PHP EQUIVALENT FOR BaseHTTPRequestHandler
+# Super globale $_SERVER
+# $_SERVER is an array containing request infos such as headers, paths etc.
+# https://www.php.net/manual/en/reserved.variables.server.php
+
 # PHP EQUIVALENT FOR HTTPServer
 # FROM php:8.2-apache
 # PHP need a web server like apache
 # here is a pre-configured php-apache docker image
 # https://hub.docker.com/layers/library/php/8.2-apache/images/sha256-89ad17cca246e8a6ce742b5b89ce65b34ce6223204a282e45f72b4f758ff6401
 
-# PHP EQUIVALENT FOR BaseHTTPRequestHandler
-# Super globale $_SERVER
-# $_SERVER is an array containing request infos such as headers, paths etc.
-# https://www.php.net/manual/en/reserved.variables.server.php

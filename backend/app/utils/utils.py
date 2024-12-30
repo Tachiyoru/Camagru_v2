@@ -152,6 +152,16 @@ class utils:
 # An associative array of variables passed via the environment method.
 # https://www.php.net/manual/en/reserved.variables.environment.php
 
-# EQUIVALENT FOR PREG_MATCH
+# EQUIVALENT FOR RE.MATCH
 # preg_match — Perform a regular expression match
 # https://www.php.net/manual/en/function.preg-match.php
+
+# PHP EQUIVALENT FOR http.cookies
+# Super globale $_COOKIE
+# $_COOKIE is an array containing the same method of http.Cookies.
+# https://www.php.net/manual/en/reserved.variables.cookies.php
+
+# PHP EQUIVALENT FOR json
+# JSON Functions
+# PHP natively include his own JSON library
+# https://www.php.net/manual/en/ref.json.php

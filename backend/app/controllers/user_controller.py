@@ -7,7 +7,6 @@ import bcrypt
 import secrets
 import json
 import time
-import re
 
 class	userCtrl:
 	def	verify_account(request):
@@ -354,5 +353,32 @@ class	userCtrl:
 		return
 
 
-# PHP EQUIVALENT GET ID IN URL
-# if (isset($_GET['id']))
+# PHP EQUIVALENT FOR parse.urlparse
+# parse_url — Parse a URL and return its components
+# https://www.php.net/manual/en/function.parse-url.php
+
+# PHP EQUIVALENT FOR parse.parse_qs
+# parse_str — Parses the string into variables
+# https://www.php.net/manual/en/function.parse-str.php
+
+# PHP EQUIVALENT FOR http.cookies
+# Super globale $_COOKIE
+# $_COOKIE is an array containing the same method of http.Cookies.
+# https://www.php.net/manual/en/reserved.variables.cookies.php
+
+# PHP EQUIVALENT FOR BCRYPT
+# password_hash — Creates a password hash
+# password_verify — Verifies that a password matches a hash
+# https://www.php.net/manual/en/function.password-hash.php
+# https://www.php.net/manual/en/function.password-verify.php
+
+# PHP EQUIVALENT FOR SECRETS
+# random_bytes — Get cryptographically secure random bytes
+# bin2hex — Convert binary data into hexadecimal representation
+# https://www.php.net/manual/en/function.random-bytes.php
+# https://www.php.net/manual/en/function.bin2hex.php
+
+# PHP EQUIVALENT FOR json
+# JSON Functions
+# PHP natively include his own JSON library
+# https://www.php.net/manual/en/ref.json.php

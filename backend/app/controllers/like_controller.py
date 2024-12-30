@@ -37,7 +37,6 @@ class	likeCtrl:
 
 		liked = False
 
-
 		for like in likes:
 			if like[1] == int(user_id):
 				liked = True
@@ -49,3 +48,13 @@ class	likeCtrl:
 			like_model.add_like(post_data["post_id"], user_id)
 			utils.return_response(request, 200, json.dumps({"message": "Post liked"}))
 		return
+
+# PHP EQUIVALENT FOR http.cookies
+# Super globale $_COOKIE
+# $_COOKIE is an array containing the same method of http.Cookies.
+# https://www.php.net/manual/en/reserved.variables.cookies.php
+
+# PHP EQUIVALENT FOR json
+# JSON Functions
+# PHP natively include his own JSON library
+# https://www.php.net/manual/en/ref.json.php
