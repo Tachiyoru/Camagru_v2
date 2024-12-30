@@ -14,7 +14,7 @@ export async function gallery(container, callback) {
 		usersList = await getAllUsers()
 		usersList = usersList.reverse();
 	}
-	
+
 	posts = usersPosts.posts.reverse();
 
 	const postsPerPage = 12;
@@ -85,6 +85,12 @@ export async function gallery(container, callback) {
 				if (userSession.logged == false)
 					window.location.href = '/#login';
 				else {
+					let totalLikes = null;
+					posts[i].likes.forEach(like => {
+						if (posts[i].id === like.post_id)
+							totalLikes++;
+					});
+					let textLike = totalLikes === 1 ? "like" : "likes";
 					const focusedElement = document.createElement('div')
 					focusedElement.setAttribute("id", "focused-section");
 					index = postsToShow[i].id;
@@ -99,7 +105,7 @@ export async function gallery(container, callback) {
 
 							</div>
 							<div id="react-section">
-								<p><strong>${postsToShow[i].likes.length}</strong> likes</p>
+								<p><strong>${postsToShow[i].likes.length}</strong> ${textLike}</p>
 								<div id="like-comment-section">
 									<i id="post-like-icon" class="fa-solid fa-heart"></i>
 									<form id="post-comment-form" action="post-comment" method="POST">

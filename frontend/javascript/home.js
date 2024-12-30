@@ -95,7 +95,7 @@ export async function home(container, callback, scrollValue) {
 							<div id="comment-display-section">
 							</div>
 							<div id="react-section">
-								<p><strong>${post.likes.length}</strong> likes</p>
+								<p><strong>${post.likes.length}</strong> ${textLike}</p>
 								<div id="like-comment-section">
 									<i id="focused-like-icon" class="fa-solid fa-heart"></i>
 									<form id="post-comment-form" action="post-comment" method="POST">

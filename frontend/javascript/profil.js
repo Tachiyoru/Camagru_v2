@@ -20,6 +20,19 @@ export async function profil(container, callback) {
 
 	let usersList = await getAllUsers()
 
+	let totalLikes = null;
+	let totalComments = null;
+	let totalPosts = null;
+
+	totalPosts = userPosts.length;
+
+	userPosts.forEach((post) => {
+		totalLikes += post.likes.length;
+		totalComments += post.comments.length;
+	})
+
+	let textLike = totalLikes === 1 ? "Like" : "Likes";
+
 	container.innerHTML =
 		`<div id="home">
 			<div id="logo-block">
@@ -40,9 +53,9 @@ export async function profil(container, callback) {
 						<i style="color: #ff0059" class="fa-solid fa-user"></i>
 					</div>
 					<div class="stats">
-						<p><strong>120</strong><br> Likes</p>
-						<p><strong>10</strong><br> Posts</p>
-						<p><strong>42</strong><br> Comments</p>
+						<p><strong>${totalLikes}</strong><br> ${textLike}</p>
+						<p><strong>${totalPosts}</strong><br> Posts</p>
+						<p><strong>${totalComments}</strong><br> Comments</p>
 					</div>
 					<p id="edit-profile-button"><strong>Edit profile</strong></p>
 				</div>
@@ -189,6 +202,7 @@ export async function profil(container, callback) {
 			const focusedElement = document.createElement('div')
 			focusedElement.setAttribute("id", "focused-section");
 			index = userPosts[i].id;
+			let plural = userPosts[i].likes.length === 1 ? "Like" : "Likes";
 			focusedElement.innerHTML = `
 			<i id="exit-focus-icon" class="fa-solid fa-xmark"></i>
 			<div id="focused-post">
@@ -200,7 +214,7 @@ export async function profil(container, callback) {
 
 					</div>
 					<div id="react-section">
-						<p><strong>${userPosts[i].likes.length}</strong> likes</p>
+						<p><strong>${userPosts[i].likes.length}</strong> ${plural}</p>
 						<div id="like-comment-section">
 							<i id="post-like-icon" class="fa-solid fa-heart"></i>
 							<form id="post-comment-form" action="post-comment" method="POST">
