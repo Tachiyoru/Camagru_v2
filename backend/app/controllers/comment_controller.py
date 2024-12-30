@@ -53,7 +53,8 @@ class commentCtrl:
 
 			comment_model.add_comment(comment_data)
 
-			utils.send_notification_email(author_of_post["email"], post_data.get('post_id'))
+			if (author_of_post["notify"] == 1):
+				utils.send_notification_email(author_of_post["email"], post_data.get('post_id'))
 
 			utils.return_response(request, 200, json.dumps({"message": "Comment succesfully send !"}))
 

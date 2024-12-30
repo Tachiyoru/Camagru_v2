@@ -318,8 +318,6 @@ class	userCtrl:
 	def update_user(request):
 		content_length = int(request.headers['Content-Length'])
 
-
-
 		try:
 			post_data = json.loads(request.rfile.read(content_length))
 
@@ -354,7 +352,6 @@ class	userCtrl:
 			utils.return_response(request, 500, json.dumps({'error': str(error)}))
 			return
 		return
-
 
 
 # PHP EQUIVALENT GET ID IN URL
