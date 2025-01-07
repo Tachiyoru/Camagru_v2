@@ -147,7 +147,7 @@ export async function home(container, callback, scrollValue) {
 							postsPos.scrollTop = scrollValue;
 							const userPosts = document.querySelectorAll('.comment');
 							const postTabLength = userPosts.length
-							userPosts[(postTabLength - post.id)].click();
+							userPosts[(postTabLength - post.id) + 1].click();
 						}, scrollValue);
 					})
 
@@ -167,7 +167,7 @@ export async function home(container, callback, scrollValue) {
 								postsPos.scrollTop = scrollValue;
 								const userPosts = document.querySelectorAll('.comment');
 								const postTabLength = userPosts.length
-								userPosts[(postTabLength - post.id)].click();
+								userPosts[(postTabLength - post.id) + 1].click();
 							}, scrollValue);
 						} else {
 							form.reportValidity();

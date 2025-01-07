@@ -14,8 +14,6 @@ export async function gallery(container, callback) {
 		usersList = await getAllUsers()
 	}
 
-	console.log(usersList)
-
 	posts = usersPosts.posts.reverse();
 
 	const postsPerPage = 12;
@@ -137,7 +135,6 @@ export async function gallery(container, callback) {
 					for (let c = 0; postsToShow[i].comments[c]; c++) {
 						const userComment = document.createElement('p');
 						userComment.setAttribute("id", "userComment")
-						console.log(postsToShow[i].comments[c])
 						userComment.innerHTML = `
 						<strong>${usersList[postsToShow[i].comments[c].user_id - 1].username}:</strong> ${postsToShow[i].comments[c].comment}
 						`;

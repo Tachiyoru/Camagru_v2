@@ -31,7 +31,6 @@ class   Router:
 				return
 		else:
 			handler = self.routes.get(method, {}).get(path, None)
-			handler = self.routes.get(method, {}).get(path, None)
 
 		if handler and path not in ["/register", "/login", "/resetPassword", "/newPassword", "/posts"]:
 			session_middleware = AuthMiddleware(handler)

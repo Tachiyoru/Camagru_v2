@@ -39,9 +39,6 @@ class postCtrl:
 				sticker_left = sticker_data['left']
 				sticker_top = sticker_data['top']
 
-				print("LEFT", sticker_data['left'])
-				print("TOP", sticker_data['top'])
-
 				# Charger le sticker
 				sticker = Image.open(os.path.join(PHOTOS_DIR, sticker_path)).convert("RGBA")
 
@@ -193,8 +190,6 @@ class postCtrl:
 			user_id = cookies.get('user_id').value if cookies.get('user_id') else None
 
 			post_model = PostModel()
-
-			print("POST_DATA: ", post_data)
 
 			post_model.delete_post(post_data)
 
