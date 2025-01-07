@@ -20,9 +20,9 @@ export async function profil(container, callback) {
 
 	let usersList = await getAllUsers()
 
-	let totalLikes = null;
-	let totalComments = null;
-	let totalPosts = null;
+	let totalLikes = 0;
+	let totalComments = 0;
+	let totalPosts = 0;
 
 	totalPosts = userPosts.length;
 
