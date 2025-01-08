@@ -19,8 +19,8 @@ export function login(container) {
 					<h1 id="logo">Camagru</h1>
 					<h2 id="slogan"><span class="slogan">Connect</span> and <span class="slogan">share</span> with <span class="slogan">people</span> from all over the <span class="slogan">world</span></h1>
 					<form id="loginForm" action="login" method="POST">
-						<input id="username" type="text" name="username" placeholder="Username" required>
-						<input id="password" type="password" name="password" placeholder="Password" required>
+						<input id="username" type="text" name="username" placeholder="Username" autocomplete="off" required>
+						<input id="password" type="password" name="password" placeholder="Password" autocomplete="off" required>
 						<button type="submit">Log in</button>
 					</form>
 					<div class="options">

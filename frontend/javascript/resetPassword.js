@@ -22,7 +22,7 @@ export function resetPassword(container) {
 						<p>Forgot your <strong><span>password</span></strong> ?</p>
 						<p><strong><span>Enter</span></strong> your email to get your <strong><span>reset</span></strong> link</p>
 					</div>
-					<input id="email" type="email" name="email" placeholder="Email" required>
+					<input id="email" type="email" name="email" autocomplete="off" placeholder="Email" required>
 					<button type="submit">Send</button>
 					<p id="error-message" style="color: red; display: none;"></p>
 					</form>

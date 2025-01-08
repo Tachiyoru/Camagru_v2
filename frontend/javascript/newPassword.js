@@ -26,8 +26,8 @@ export function newPassword(container) {
 					<h1 id="logo">Camagru</h1>
 					<form id="newPasswordForm" action="newPassword" method="POST">
 						<p><strong><span>Please</span></strong> enter your new <strong><span>password</span></strong></p>
-						<input id="password" type="password" name="password" placeholder="New Password" required>
-						<input id="confirm-password" type="password" name="confirm-password" placeholder="Confirm Password" required>
+						<input id="password" type="password" name="password" placeholder="New Password" autocomplete="off" required>
+						<input id="confirm-password" type="password" name="confirm-password" placeholder="Confirm Password" autocomplete="off" required>
 						<button type="submit">Send</button>
 						<p id="error-message" style="color: red; display: none;"></p>
 					</form>

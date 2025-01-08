@@ -65,9 +65,9 @@ export async function profil(container, callback) {
 				<div id="edit-profile-container" class="edit-profile-container">
 					<p><strong>My infos</strong></p>
 						<form id="edit-profile-form" action="submit" method="PUT">
-							<input id="username" type="text" name="username" placeholder="${user.username}">
-							<input id="email" type="email" name="email" placeholder="${user.email}">
-							<input id="password" type="password" name="password" placeholder="Password">
+							<input id="username" type="text" name="username" autocomplete="off" placeholder="${user.username}">
+							<input id="email" type="email" name="email" autocomplete="off" placeholder="${user.email}">
+							<input id="password" type="password" name="password" autocomplete="off" placeholder="Password">
 							<p id="error-message" style="color: red; display: none;"></p>
 							<button type="submit">Update</button>
 							<div id="notifications-container"></div>

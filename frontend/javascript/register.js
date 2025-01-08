@@ -19,9 +19,9 @@ export function register(container) {
 					<h1 id="logo">Camagru</h1>
 					<h2 id="slogan"><span class="slogan">Connect</span> and <span class="slogan">share</span> with <span class="slogan">people</span> from all over the <span class="slogan">world</span></h1>
 					<form id="registerForm" action="register" method="POST">
-						<input id="username" type="text" name="username" placeholder="Username" required>
-						<input id="email" type="email" name="email" placeholder="Email" required>
-						<input id="password" type="password" name="password" placeholder="Password" required>
+						<input id="username" type="text" name="username" autocomplete="off" placeholder="Username" required>
+						<input id="email" type="email" name="email" autocomplete="off" placeholder="Email" required>
+						<input id="password" type="password" name="password" autocomplete="off" placeholder="Password" required>
 						<button type="submit">Sign up</button>
 					</form>
 					<div>
