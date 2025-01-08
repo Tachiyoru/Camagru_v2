@@ -47,6 +47,7 @@ export async function home(container, callback, scrollValue) {
 		let textLike = totalLikes === 1 ? "like" : "likes";
 
 		const postElement = document.createElement('div');
+		postElement.setAttribute("data-post-id", post.id);
 		postElement.className = 'post';
 		postElement.innerHTML = `
 			<div id="post">
@@ -145,9 +146,10 @@ export async function home(container, callback, scrollValue) {
 						home(container, () => {
 							const postsPos = document.getElementById('posts-container');
 							postsPos.scrollTop = scrollValue;
-							const userPosts = document.querySelectorAll('.comment');
-							const postTabLength = userPosts.length
-							userPosts[(postTabLength - post.id) + 1].click();
+							const targetPost = document.querySelector(`[data-post-id="${post.id}"] .comment`);
+							if (targetPost) {
+								targetPost.click();
+							}
 						}, scrollValue);
 					})
 
@@ -165,9 +167,10 @@ export async function home(container, callback, scrollValue) {
 							home(container, () => {
 								const postsPos = document.getElementById('posts-container');
 								postsPos.scrollTop = scrollValue;
-								const userPosts = document.querySelectorAll('.comment');
-								const postTabLength = userPosts.length
-								userPosts[(postTabLength - post.id) + 1].click();
+								const targetPost = document.querySelector(`[data-post-id="${post.id}"] .comment`);
+								if (targetPost) {
+									targetPost.click();
+								}
 							}, scrollValue);
 						} else {
 							form.reportValidity();
